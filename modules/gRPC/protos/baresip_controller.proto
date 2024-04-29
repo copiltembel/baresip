@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "com.baresip.control";
+// option objc_class_prefix = "AEC";
+
+package baresip;
+import "google/protobuf/empty.proto";
+
+// A BaresipController service lets you control a baresip instance.
+service BaresipController {
+    rpc streamEvents(Event) returns (stream Event) {}
+}
+
+message Event {
+    string type = 1;
+    string class = 2;
+    string accountator = 3;
+    string param = 4;
+}
+
+message Command {
+    string command = 1;
+    string params = 2;
+    string token = 3;
+}
