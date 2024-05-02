@@ -4,7 +4,7 @@ option java_multiple_files = true;
 option java_package = "com.baresip.control";
 // option objc_class_prefix = "AEC";
 
-package baresip;
+package baresipgRPC;
 import "google/protobuf/empty.proto";
 
 // A BaresipController service lets you control a baresip instance.
@@ -13,10 +13,7 @@ service BaresipController {
 }
 
 message Event {
-    string type = 1;
-    string class = 2;
-    string accountator = 3;
-    string param = 4;
+    string json_encoded = 1;
 }
 
 message Command {

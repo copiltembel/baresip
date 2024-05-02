@@ -1,4 +1,4 @@
-project(baresip_gRPC)
+project(gRPC)
 
 # list(APPEND MODULES_DETECTED ${PROJECT_NAME})
 # set(MODULES_DETECTED ${MODULES_DETECTED} PARENT_SCOPE)
@@ -7,7 +7,7 @@ project(baresip_gRPC)
 # Looks for protobuf-config.cmake file installed by Protobuf's cmake installation.
 # option(protobuf_MODULE_COMPATIBLE TRUE)
 
-find_package(Protobuf)
+find_package(Protobuf CONFIG)
 find_package(gRPC)
 
 if (NOT Protobuf_FOUND OR NOT gRPC_FOUND) 
@@ -17,7 +17,9 @@ endif()
 list(APPEND MODULES_DETECTED ${PROJECT_NAME})
 set(MODULES_DETECTED ${MODULES_DETECTED} PARENT_SCOPE)
 
-find_package(Protobuf CONFIG REQUIRED)
+# find_package(absl CONFIG REQUIRED)
+
+# find_package(Protobuf CONFIG REQUIRED)
 message(STATUS "Using protobuf ${Protobuf_VERSION}")
 
 set(_PROTOBUF_LIBPROTOBUF protobuf::libprotobuf)
@@ -30,7 +32,7 @@ endif()
 
 # Find gRPC installation
 # Looks for gRPCConfig.cmake file installed by gRPC's cmake installation.
-find_package(gRPC REQUIRED)
+# find_package(gRPC REQUIRED)
 message(STATUS "Using gRPC ${gRPC_VERSION}")
 
 set(_GRPC_GRPCPP gRPC::grpc++)
@@ -62,7 +64,7 @@ add_custom_command(
 # protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS baresip_controller.proto)
 
 
-set(SRCS ${baresip_controller_grpc_srcs} BaresipController.cpp)
+set(SRCS ${baresipController_proto_srcs} ${baresip_controller_grpc_srcs} BaresipController.cpp)
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
 if(STATIC)
@@ -70,6 +72,10 @@ if(STATIC)
 else()
     add_library(${PROJECT_NAME} MODULE ${SRCS})
 endif()
+
+# target_link_libraries(${PROJECT_NAME} PUBLIC ${Protobuf_LIBRARIES} absl::log_internal_message absl::log_internal_check_op gRPC::grpc gRPC::grpc++ gRPC::grpc++_reflection libabsl_log_internal_nullguard.a libabsl_log_internal_message.a libabsl_log_internal_check_op.a libabsl_log_globals.a libabsl_log_internal_log_sink_set.a libabsl_log_sink.a libabsl_log_internal_proto.a)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE ${Protobuf_LIBRARIES} gRPC::grpc gRPC::grpc++ gRPC::grpc++_reflection)
 
 # target_include_directories(${PROJECT_NAME} PRIVATE ${WEBRTC_AEC_INCLUDE_DIRS})
 # target_link_libraries(${PROJECT_NAME} PRIVATE ${WEBRTC_AEC_LIBRARIES})
