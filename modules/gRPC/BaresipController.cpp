@@ -154,6 +154,7 @@ void baresip_controller_close(void)
         info("gRPC: Server shutting down\n");
         grpcServer->Shutdown();
         grpcServer.reset(nullptr);
+        (void)thrd_join(baresipController->serverThread, NULL);
     }
     baresipController.reset(nullptr);
 }
